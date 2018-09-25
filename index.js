@@ -5,15 +5,23 @@ const scraping = async () => {
   const user = process.env.USER_ID
   const password = process.env.PASSWORD
 
-  const browser = await puppeteer.launch()
+  const browser = await puppeteer.launch({
+    headless: true,
+    slowMo: 10 // 遅延時間
+  })
   const page = await browser.newPage()
-  await page.goto(URL, { waitUntil: 'domcontentloaded' })
-
+  await page.goto(URL, {
+    waitUntil: 'domcontentloaded'
+  })
+  // ![img](hoge.svg)
   await page.type('#TextLoginID', user)
   await page.type('#TextPassword', password)
   await page.waitFor(1000)
   await page.click('#buttonHtmlLogon')
-  await page.waitFor(5000)
+  await page.goto(URL, {
+    waitUntil: 'domcontentloaded'
+  })
+  await page.waitFor(2000)
 
   const marge = (texts, dates, deadlines) => {
     const result = []

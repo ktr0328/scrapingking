@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="400px" height="400px">
+    <rect fill="rgb(255, 255, 255)" x="9" y="85" width="333" height="225"/>
+    <ellipse fill="rgb(196, 83, 83)" cx="169" cy="197.5" rx="61" ry="60.5"/>
+    <text fill="rgb(83, 196, 192)" font-size="69.6" x="74.6" y="275" textLength="182.8">
+        Japan
+    </text>
+</svg>
