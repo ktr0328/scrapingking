@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer')
+const path = require('path')
 
 const scraping = async () => {
   const URL = 'https://king.kcg.kyoto/campus/Course/Home'
@@ -6,7 +7,7 @@ const scraping = async () => {
   const password = process.env.PASSWORD
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     slowMo: 10 // 遅延時間
   })
   const page = await browser.newPage()
@@ -91,7 +92,8 @@ const getData = async () => {
 }
 
 getData().then(e => {
-  require('fs').writeFile('./result.json', JSON.stringify(e, null, 2), 'utf-8', err => {
+  const filePath = path.resolve('./', 'result.json')
+  require('fs').writeFile(filePath, JSON.stringify(e, null, 2), 'utf-8', err => {
     if (err) console.log(err)
   })
 }).then(() => console.log('succeeded!')).catch(err => console.log(err))
