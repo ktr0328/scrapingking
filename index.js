@@ -1,20 +1,19 @@
 const puppeteer = require('puppeteer')
 const path = require('path')
+const sendToSlack = require(path.resolve(__dirname, './sendToSlack'))
+const config = require(path.resolve(__dirname, 'config'))
 
 const scraping = async () => {
   const URL = 'https://king.kcg.kyoto/campus/Course/Home'
   const user = process.env.USER_ID
   const password = process.env.PASSWORD
 
-  const browser = await puppeteer.launch({
-    headless: false,
-    slowMo: 10 // 遅延時間
-  })
+  const puppeteer_config = config.puppeteer
+  const browser = await puppeteer.launch(puppeteer_config)
   const page = await browser.newPage()
   await page.goto(URL, {
     waitUntil: 'domcontentloaded'
   })
-  // ![img](hoge.svg)
   await page.type('#TextLoginID', user)
   await page.type('#TextPassword', password)
   await page.waitFor(1000)
@@ -88,12 +87,18 @@ const scraping = async () => {
 
 const getData = async () => {
   const data = await scraping()
-  return data
-}
+  const filePath = path.resolve(__dirname, config.file_name)
 
-getData().then(e => {
-  const filePath = path.resolve('./', 'result.json')
-  require('fs').writeFile(filePath, JSON.stringify(e, null, 2), 'utf-8', err => {
+  if (process.env.SLACK_HOOK_URL) {
+    sendToSlack(data)
+  }
+  require('fs').writeFile(filePath, JSON.stringify(data, null, 2), config.file_encoding, err => {
     if (err) console.log(err)
   })
-}).then(() => console.log('succeeded!')).catch(err => console.log(err))
+}
+
+setTimeout(() => {
+  getData()
+}, 1000 * 60 * 60 * config.per_hour)
+
+getData()
