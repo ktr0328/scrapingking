@@ -18,6 +18,7 @@ const scraping = async () => {
   await page.type('#TextPassword', password)
   await page.waitFor(1000)
   await page.click('#buttonHtmlLogon')
+  await page.waitFor(1000)
   await page.goto(URL, {
     waitUntil: 'domcontentloaded'
   })
